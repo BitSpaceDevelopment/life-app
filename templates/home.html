@@ -1,0 +1,18 @@
+<!-- home.html -->
+<ion-view view-title="Home">
+	<ion-content class="padding">
+		<h1>Welcome to the LIFE App</h1>
+		<p> 
+		This is the home page for the LIFE app. 
+		Click the Sign In button to Sign in the app or click Explore button to explore resources!
+		</p>
+
+		<p ng-if="flag == false">
+		<a class="button icon icon-right ion-chevron-right" ui-sref="tabs.signin">Sign In</a>
+		</p>
+
+		<p>
+		<a class="button icon icon-right ion-chevron-right" ui-sref="tabs.resource-index">Explore</a>
+		</p>
+	</ion-content>
+</ion-view>

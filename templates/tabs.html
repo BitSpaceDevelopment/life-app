@@ -1,0 +1,79 @@
+<ion-view>  
+  <ion-side-menus>
+    <ion-side-menu-content class="main">
+      <ion-nav-bar class="bar-positive">
+        <ion-nav-back-button>
+        </ion-nav-back-button>
+
+        <ion-nav-buttons side="right">
+          <button class="button button-icon icon ion-navicon" menu-toggle="right">
+          </button>
+        </ion-nav-buttons>
+      </ion-nav-bar>
+
+
+      <ion-view>
+        <ion-tabs class="tabs-icon-bottom tabs-positive">
+
+          <ion-tab title="Home" icon="ion-home" ui-sref="tabs.home">
+            <ion-nav-view name="home-tab"></ion-nav-view>
+          </ion-tab>
+
+          <ion-tab title="About" icon="ion-ios-information" ui-sref="tabs.about">
+            <ion-nav-view name="about-tab"></ion-nav-view>
+          </ion-tab>
+
+          <ion-tab title="Contact" icon="ion-ios-world" ui-sref="tabs.contact">
+            <ion-nav-view name="contact-tab"></ion-nav-view>
+          </ion-tab>
+
+        </ion-tabs>
+      </ion-view>
+    </ion-side-menu-content>
+    <!-- Side Bar for the application -->
+    <!-- The Side Bar can be opened via the button in the header, or by swiping the screen -->
+    <ion-side-menu side="right">
+      <ion-header-bar>
+        <h1 class="title">LiFE</h1>
+      </ion-header-bar>
+      <ion-content>
+        <ion-list>
+          <ion-item ui-sref="tabs.home" menu-toggle="right" class="item item-icon-left">
+            <i class="icon ion-home"></i>
+            Home
+          </ion-item>
+          <ion-item ui-sref="tabs.intro-survey" menu-toggle="right" class="item item-icon-left">
+            <i class="icon ion-clipboard"></i>
+            Intro Surveys
+          </ion-item>
+          <ion-item ui-sref="tabs.resource-index" menu-toggle="right" class="item item-icon-left">
+            <i class="icon ion-clipboard"></i>
+            Resources
+          </ion-item>
+          <ion-item ui-sref="tabs.survey-index" menu-toggle="right" class="item item-icon-left">
+            <i class="icon ion-gear-a"></i>
+            LiFE Surveys
+          </ion-item>
+   
+          <span ng-if="flag == false">
+            <ion-item ui-sref="tabs.signin" menu-toggle="right" class="item item-icon-left">
+              <i class="icon ion-power"></i>
+              Sign In
+            </ion-item>
+            <ion-item ui-sref="tabs.signup" menu-toggle="right" class="item item-icon-left">
+              <i class="icon ion-power"></i>
+              Sign Up
+            </ion-item>
+          </span>
+          <span ng-if="flag == true">
+            <ion-item ui-sref="tabs.signout" menu-toggle="right" class="item item-icon-left">
+              <i class="icon ion-power"></i>
+              Sign Out 
+            </ion-item>
+          </span>
+
+        </ion-list>
+      </ion-content>
+    </ion-side-menu>
+  </ion-side-menus>
+</ion-view>

@@ -1,0 +1,50 @@
+<ion-view view-title="L Quiz">
+	<ion-content class="padding">
+		<div ng-show="showLiving" class="ng-hide">
+			<h4>
+			<span>Will you live<a href="" ng-click="livingQuiz()">@...</a></span>
+			</h4>
+			<div ng-show='toggled' class="ng-hide">
+				<div class="item item-body">
+			        <div>
+			          {{question.content}}
+			        </div>
+		    	</div>
+
+			    <ion-radio ng-repeat="answer in answers" ng-value="answer.score" ng-model="data.answers" ng-change="next(answer)" name="answers">
+			    	{{answer.content}}
+			    </ion-radio>
+			</div>	
+		</div>
+		
+
+		<div ng-show="showTrans" class="ng-hide">
+			<h4>
+			<span>Will you go school <a href="" ng-click="transQuiz()">by...</a></span>
+			</h4>
+			<div ng-show='toggled' class="ng-hide">
+				<div class="item item-body">
+			        <div>
+			          {{question.content}}
+			        </div>
+		    	</div>
+
+			    <ion-radio ng-repeat="answer in answers" ng-value="answer.score" ng-model="data.answers" ng-change="next(answer)" name="answers">
+			    	{{answer.content}}
+			    </ion-radio>
+			</div>	
+		</div>
+
+		<div ng-show="showOther" class="ng-hide">
+			<div class="item item-body">
+		        <div>
+		          {{question.content}}
+		        </div>
+	    	</div>
+
+		    <ion-radio ng-repeat="answer in answers" ng-value="answer.score" ng-model="data.answers" ng-change="next(answer)" name="answers">
+		    	{{answer.content}}
+		    </ion-radio>
+		</div>
+	</ion-content>
+</ion-view>

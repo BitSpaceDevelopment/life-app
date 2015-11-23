@@ -17,7 +17,7 @@ lifeApp.application.config(function($httpProvider, $authProvider, $stateProvider
   $httpProvider.defaults.withCredentials = true;
 
   $authProvider.configure({
-    apiUrl: 'http://localhost:3000/api/v1'
+    apiUrl: 'http://stage.lifeapp.bitspacedevelopment.com/api/v1'
   });
 
   // States
@@ -562,7 +562,7 @@ lifeApp.controllers.controller('ResourceCtrl', function($scope, $stateParams, $i
 	
     //add favourite resource
     $scope.favouritedResource = function favouritedResource(id) {     
-        url = "http://localhost:3000/favourite/" + id + ".json";
+        url = "http://stage.lifeapp.bitspacedevelopment.com/favourite/" + id + ".json";
 
         $http.get(url).success( function(response) {
             if(response.length > 1) {
@@ -739,17 +739,17 @@ lifeApp.lib.constant('Module', function() {
 });
 
 lifeApp.services.factory('Answer', function($resource){
-	return $resource('http://localhost:3000/questions/:questionId/answers/:id', {questionId: '@questionId', id: '@id'});
+	return $resource('http://stage.lifeapp.bitspacedevelopment.com/:questionId/answers/:id', {questionId: '@questionId', id: '@id'});
 });
 lifeApp.services.factory('Category', function($resource){
-	return $resource('http://localhost:3000/questions/:questionId/categories/:id', {questionId: '@questionId', id: '@id'});
+	return $resource('http://stage.lifeapp.bitspacedevelopment.com/:questionId/categories/:id', {questionId: '@questionId', id: '@id'});
 });
 lifeApp.services.factory('FirstTierQuestion', function($resource){
-	return $resource('http://localhost:3000/surveyQuestions/:surveyId', {surveyId: '@id'});
+	return $resource('http://stage.lifeapp.bitspacedevelopment.com/surveyQuestions/:surveyId', {surveyId: '@id'});
 });
 
 lifeApp.services.factory('FirstTierSurvey', function($resource){
-	return $resource('http://localhost:3000/surveys/:id', {id: '@id'});
+	return $resource('http://stage.lifeapp.bitspacedevelopment.com/surveys/:id', {id: '@id'});
 });
 lifeApp.services.factory('Flag', function(){
 	var flag = "";
@@ -772,7 +772,7 @@ lifeApp.services.factory('Flag', function(){
 });
 
 lifeApp.services.factory('Question', function($resource){
-	return $resource('http://localhost:3000/questions/:id', {id: '@id'});
+	return $resource('http://stage.lifeapp.bitspacedevelopment.com/questions/:id', {id: '@id'});
 });
 
 lifeApp.services.factory('Recommend', function(){
@@ -796,31 +796,31 @@ lifeApp.services.factory('Recommend', function(){
 	};
 });
 lifeApp.services.factory('RecommendResources', function($resource){
-	return $resource('http://localhost:3000/recommendResources/:questionId', {questionId: '@id'});
+	return $resource('http://stage.lifeapp.bitspacedevelopment.com/recommendResources/:questionId', {questionId: '@id'});
 });
 lifeApp.services.factory('Resource', function($resource) {
-  return $resource("http://localhost:3000/resources/:categoryId", {categoryId: '@id'});
+  return $resource("http://stage.lifeapp.bitspacedevelopment.com/:categoryId", {categoryId: '@id'});
 });
 lifeApp.services.factory('resourceCategory', function($resource) {
-  return $resource("http://localhost:3000/resources-list/:id.json");
+  return $resource("http://stage.lifeapp.bitspacedevelopment.com/resources-list/:id.json");
 });
 
 lifeApp.services.factory('SecondTierQuestion', function($resource){
-	return $resource('http://localhost:3000/secondTierQuestions/:secondtiersurveyId', {secondtiersurveyId: '@id'});
+	return $resource('http://stage.lifeapp.bitspacedevelopment.com/secondTierQuestions/:secondtiersurveyId', {secondtiersurveyId: '@id'});
 });
 lifeApp.services.factory('SecondTierSurvey', function($resource){
-	return $resource('http://localhost:3000/secondTierSurveys/:surveyId', {surveyId: '@id'});
+	return $resource('http://stage.lifeapp.bitspacedevelopment.com/secondTierSurveys/:surveyId', {surveyId: '@id'});
 });
 lifeApp.services.factory('ThirdTierQuestion', function($resource){
-	return $resource('http://localhost:3000/thirdTierQuestions/:thirdtiersurveyId', {thirdtiersurveyId: '@id'});
+	return $resource('http://stage.lifeapp.bitspacedevelopment.com/thirdTierQuestions/:thirdtiersurveyId', {thirdtiersurveyId: '@id'});
 });
 lifeApp.services.factory('ThirdTierSurvey', function($resource){
-	return $resource('http://localhost:3000/thirdTierSurveys/:secondtiersurveyId', {secondtiersurveyId: '@id'});
+	return $resource('http://stage.lifeapp.bitspacedevelopment.com/thirdTierSurveys/:secondtiersurveyId', {secondtiersurveyId: '@id'});
 });
 lifeApp.services.factory('UserRegistration', function($resource) {
-    return $resource("http://localhost:3000/users/sign_up.json");
+    return $resource("http://stage.lifeapp.bitspacedevelopment.com/users/sign_up.json");
 });
 
 lifeApp.services.factory('UserSession', function($resource) {
-  return $resource("http://localhost:3000/users/sign_in.json");
+  return $resource("http://stage.lifeapp.bitspacedevelopment.com/sign_in.json");
 });

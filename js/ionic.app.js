@@ -7,7 +7,7 @@
 // 'starter.controllers' is found in controllers.js
 
 window.lifeApp = {
-  application: angular.module('lifeApp', ['ionic', 'lifeApp.lib', 'lifeApp.controllers', 'lifeApp.services', 'ngResource', 'ng-token-auth', 'rails']),
+  application: angular.module('lifeApp', ['ionic', 'lifeApp.lib', 'lifeApp.controllers', 'lifeApp.services', 'ngResource', 'ng-token-auth', 'rails', 'ngRoute']),
   controllers: angular.module('lifeApp.controllers', []),
   services: angular.module('lifeApp.services', []),
   lib: angular.module('lifeApp.lib', [])
@@ -26,14 +26,14 @@ lifeApp.application.config(function($httpProvider, $authProvider, $stateProvider
   .state('tabs', {
     url: '/',
     templateUrl: 'templates/tabs.html',
-    controller: 'UserTabsCtrl'
+    controller: 'UserSessionCtrl'
   })
   .state('tabs.home', {
     url: 'home',
     views: {
       'home-tab': {
         templateUrl: 'templates/home.html',
-        controller: 'UserTabsCtrl'
+        controller: 'UserSessionCtrl'
       }
     }
   })
@@ -50,6 +50,14 @@ lifeApp.application.config(function($httpProvider, $authProvider, $stateProvider
     views: {
       'contact-tab': {
         templateUrl: 'templates/contact.html'
+      }
+    }
+  })
+  .state('tabs.landing', {
+    url: 'langding-page',
+    views: {
+      'home-tab': {
+        templateUrl: 'templates/landing.html'
       }
     }
   })
@@ -111,6 +119,7 @@ lifeApp.application.config(function($httpProvider, $authProvider, $stateProvider
   })
   //End Resources
 
+  //Sessions
   .state('settings', {
     url: 'settings',
     templateUrl: 'templates/partial-settings.html'
@@ -120,7 +129,7 @@ lifeApp.application.config(function($httpProvider, $authProvider, $stateProvider
     views: {
       'home-tab': {
         templateUrl: 'templates/SignIn.html',
-    controller: 'SignInCtrl'
+    controller: 'UserSessionCtrl'
       }
     }
   })
@@ -130,14 +139,6 @@ lifeApp.application.config(function($httpProvider, $authProvider, $stateProvider
       'home-tab': {
         templateUrl: 'templates/SignUp.html',
     controller: 'SignUpCtrl'
-      }
-    }
-  })
-  .state('tabs.signout', {
-    url: 'signout',
-    views: {
-      'home-tab': {
-        controller: 'SignOutCtrl'
       }
     }
   });
@@ -155,12 +156,6 @@ lifeApp.application.run(function($ionicPlatform) {
       return StatusBar.styleLightContent();
     }
   });
-});
-
-lifeApp.controllers.controller('AccountCtrl', function($scope) {
-  return $scope.settings = {
-    enableFriends: true
-  };
 });
 
 lifeApp.controllers.controller('SurveyCtrl', function($scope, $state, FirstTierQuestion, FirstTierSurvey, Question, Answer, Category, Flag){
@@ -207,16 +202,16 @@ lifeApp.controllers.controller('SurveyCtrl', function($scope, $state, FirstTierQ
 				score = answer.score;
 				//depend on returned question category, accumlate socre by category
 				switch (categoryID){
-					case 1:
+					case 2:
 					totalLScore += score;
 					break;
-					case 2:
+					case 3:
 					totalIScore += score;
 					break;
-					case 3:
+					case 4:
 					totalFScore += score;
 					break;
-					case 4:
+					case 5:
 					totalEScore += score;
 					break;
 					default:
@@ -593,50 +588,11 @@ lifeApp.controllers.controller('ResourceCtrl', function($scope, $stateParams, $i
     }
 });
 
-lifeApp.controllers.controller('SignInCtrl', function($scope, $state, UserSession, $ionicPopup) {
-  $scope.data = {};
-
-  $scope.signin = function(){
-    var user_session = new UserSession({user: $scope.data});
-    user_session.$save(
-      function(data){
-        window.localStorage.clear();  
-        window.localStorage['userId'] = data.id;
-        window.localStorage['userName'] = data.name;
-        $state.go('tabs.about');
-      },
-      function(err){
-        var error = err["data"]["error"] || err.data.join('. ')
-        var confirmPopup = $ionicPopup.alert({
-          title: 'Error',
-          template: error
-        });
-      }
-    );
-  }
-});
-
-lifeApp.controllers.controller('SignOutCtrl', function($scope, $ionicPopup, $state, $http) {
-  var confirm = $ionicPopup.confirm({
-    title: "Are you sure you want to logout?",
-  });
-  confirm.then(function(result){
-    if(result){
-      window.localStorage.clear();    
-      $state.go('tabs.home');    
-    }
-  });
-});
-
-lifeApp.controllers.controller('SignUpCtrl', function($scope) {
+lifeApp.controllers.controller('SignUpCtrl', function($scope, $state) {
   $scope.handleRegBtnClick = function() {
     $auth.submitRegistration($scope.registrationForm)
       .then(function(resp) {
-        // handle success response
-                  var confirmPopup = $ionicPopup.alert({
-          title: 'success',
-          template: 'Thank you for registering'
-        })
+        $state.go('tabs.signin');
       })
       .catch(function(error) {
         // handle error response
@@ -688,12 +644,54 @@ lifeApp.controllers.controller('SurveyIndexCtrl', function($scope, $ionicPopup, 
 		}
 	});
 });
-lifeApp.controllers.controller('UserTabsCtrl', function($scope, $http) {   
+lifeApp.controllers.controller('UserSessionCtrl', function($scope, $state, $window, UserSession, UserDestroy, $ionicPopup) {
+  //check if user log in or not
+  $scope.flag = false;
+  if (window.localStorage['userId']) {
+    $scope.flag = true;
+  }
+  //init sgin in form data
+  $scope.data = {};
+  
+  $scope.signin = function(){
+    //create new session with data user type in the sign in page
+    var user_session = new UserSession({user: $scope.data});
+    //attempt to save the session
+    user_session.$save(
+      function(data){
+        //if success save the id and name into local storage
+        window.localStorage.clear();  
+        window.localStorage['userId'] = data.id;
+        window.localStorage['userName'] = data.email;
+        //refresh page to update the localstorage 
+        $window.location.reload();
+        $state.go('tabs.landing');
+      },
+      function(err){
+        //if not success, show erro to user
+        var error = err["data"]["error"] || err.data.join('. ')
+        var confirmPopup = $ionicPopup.alert({
+          title: 'Error',
+          template: error
+        });
+      }
+    );
+  }
 
-	$scope.flag = false;
-	if (window.localStorage['userId']) {
-		$scope.flag = true;
-	}
+  $scope.signout = function(){ 
+    var confirm = $ionicPopup.confirm({
+      title: "Are you sure you want to logout?",
+    });
+    confirm.then(function(result){
+      if(result){
+        UserDestroy.get().$promise.then(function(){
+          window.localStorage.clear();
+          $window.location.reload();  
+          $state.go('tabs.home');
+        }); 
+      }
+    });
+  }
 });
 
 var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
@@ -817,10 +815,9 @@ lifeApp.services.factory('ThirdTierQuestion', function($resource){
 lifeApp.services.factory('ThirdTierSurvey', function($resource){
 	return $resource('http://stage.lifeapp.bitspacedevelopment.com/thirdTierSurveys/:secondtiersurveyId', {secondtiersurveyId: '@id'});
 });
-lifeApp.services.factory('UserRegistration', function($resource) {
-    return $resource("http://stage.lifeapp.bitspacedevelopment.com/users/sign_up.json");
+lifeApp.services.factory('UserDestroy', function($resource) {
+  return $resource("http://stage.lifeapp.bitspacedevelopment.com/users/sign_out.json");
 });
-
 lifeApp.services.factory('UserSession', function($resource) {
-  return $resource("http://stage.lifeapp.bitspacedevelopment.com/sign_in.json");
+  return $resource("http://stage.lifeapp.bitspacedevelopment.com/users/sign_in.json");
 });

@@ -1,8 +1,18 @@
 <ion-view view-title="About">
 	<ion-content class="padding">
-	    <p>Here will be the Introduction of LiFE App / Video loading here also</p>
-    	<p>
-		<a class="button icon icon-right ion-chevron-right" ui-sref="tabs.intro-survey">Go</a>
+
+    <!-- The welcome-card div can be removed and replaced with a video if need be -->
+    <div class="welcome-card about-ver">
+      <img src="../img/logoWhiteSmall.png">
+    </div>
+    <div class="welcome-text-paragraph" ng-controller="LandingPropertiesCtrl">
+      {{about.content}}
+    </div>
+
+    <!-- TODO: This button should not appear if the user has completed the intro-survey -->
+    <p>
+      <!-- TODO: Make sure this button leads to the intro survey -->
+		  <a class="button button-block button-calm icon-right ion-chevron-right" ui-sref="tabs.intro-survey">GO</a>
 		</p>
 	</ion-content>
 </ion-view>

@@ -4,11 +4,35 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
-    <title></title>
+    <!-- Update your html tag to include the itemscope and itemtype attributes. -->
+    <html itemscope itemtype="http://schema.org/Article">
+    <title>The LiFE App</title>
+    <meta name="description" content="The LiFE app is a tool to help you get ready for post-secondary education." />
 
-    <!-- include angular-cookie and ng-token-auth on the page
-    <script src="lib/angular-cookie/angular-cookie.js"></script>
-    <script src="lib/ng-token-auth/dist/ng-token-auth.js"></script> -->
+    <!-- Schema.org markup for Google+ -->
+    <meta itemprop="name" content="The LiFE App">
+    <meta itemprop="description" content="The LiFE app is a tool to help you get ready for post-secondary education">
+    <meta itemprop="image" content="../img/icon.png">
+
+    <!-- Twitter Card data -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="The LiFE App">
+    <meta name="twitter:description" content="The LiFE app is a tool to help you get ready for post-secondary education">
+    <!-- Twitter summary card with large image must be at least 280x150px -->
+    <meta name="twitter:image:src" content="../img/icon.png">
+
+    <!-- Open Graph data -->
+    <meta property="og:title" content="The LiFE App" />
+    <meta property="og:type" content="article" />
+    <!-- TODO: Find out what domain they had and put it here -->
+    <meta property="og:url" content="http://www.websitehere.com/" />
+    <meta property="og:image" content="../img/icon.png" />
+    <meta property="og:description" content="The LiFE app is a tool to help you get ready for post-secondary education" />
+
+    <!-- favicon -->
+    <link rel="icon"
+          type="image/png"
+          href="../img/favicon.png">
 
     <!-- CSS -->
     <!-- compiled css output -->
@@ -17,6 +41,11 @@
     <link href="lib/ionic/css/ionic.css" rel="stylesheet">
     <!-- extra css -->
     <link href="css/style.css" rel="stylesheet">
+    <!-- Fonts -->
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
 
     <!-- JAVASCRIPT -->
     <!-- ionic/angularjs js -->
@@ -33,7 +62,7 @@
     <script src="js/ionic.app.min.js"></script>
     <!-- uncompiled js -->
     <script src="js/app.js"></script>
-    
+
   </head>
   <body ng-app="lifeApp" class="platform-browser platform-cordova platform-webview">
     <ion-nav-view></ion-nav-view>

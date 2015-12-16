@@ -1,22 +1,17 @@
 <!-- partial-login.html -->
-<ion-view view-title="SignIn">
+<ion-view view-title="Sign In">
 	<ion-content class="padding">
-		<div class="list">
+		<form ng-submit="signin()" class="list">
       <label class="item item-input">
         <span class="input-label">Email</span>
-        <input type="email" placeholder="Email" ng-model="data.email">
+        <input type="email" placeholder="Email" ng-model="data.email" required />
       </label>
       <label class="item item-input">
         <span class="input-label">Password</span>
-        <input type="password" placeholder="Password" ng-model="data.password">
+        <input type="password" placeholder="Password" ng-model="data.password" required />
       </label>
-    </div>
-
-    <div class="padding">
-      <button class="button button-block button-calm" ng-click="signin()">Sign In</button>
-    </div>
-    <div>
-			<p>Don't have an account? <a ui-sref="tabs.signup">Sign Up!</a></p>
-		</div>
-	</ion-content>
+      <button class="button button-block button-calm" type="submit">Sign In</button>
+      <button class="button button-block button-calm" ui-sref="tabs.signup">Sign Up</button>
+    </form>
+  </ion-content>
 </ion-view>

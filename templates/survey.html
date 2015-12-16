@@ -1,0 +1,31 @@
+<ion-view view-title="Survey">
+	<ion-content class="padding">
+		<div ng-if="!end">
+			<div>
+				<div class="card">
+          <div class="item item-text-wrap">
+            {{question.content}}
+          </div>
+        </div>
+			<ion-radio ng-repeat="answer in question.answers" ng-value="answer.score" ng-click="next(answer)">
+				{{answer.content}}
+	    	</ion-radio>
+			</div>
+		</div>
+
+		<div id="survey_end" ng-if="end">
+			<div id="show_resources" ng-if="showResources">
+				<p>Based on your response to this survey, we recommend you take a look at these resources.</p>
+				<div ng-repeat="resource in showResources">
+					<p ng-repeat="r in resource">
+						{{r.content}}: {{r.description}}
+					</p>
+				</div>
+			</div>
+
+			<div if="no_resources" ng-if="!showResources">
+				<p>No resources to show. Congrats!</p>
+			</div>
+		</div>
+	</ion-content>
+</ion-view>

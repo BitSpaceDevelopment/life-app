@@ -1,18 +1,28 @@
 <!-- home.html -->
 <ion-view view-title="Home">
 	<ion-content class="padding">
-		<h1>Welcome to the LIFE App</h1>
-		<p> 
-		This is the home page for the LIFE app. 
-		Click the Sign In button to Sign in the app or click Explore button to explore resources!
-		</p>
+    <div class="welcome-card">
+      <img src="../img/logoWhiteSmall.png">
+    </div>
+    <h1 class="welcome-text">WELCOME TO THE <img src="../img/logoBlackXSmall.png" height="27px" class="logo-in-text"> APP</h1>
+    <div class="welcome-text-paragraph" ng-controller="HomePropertiesCtrl">
+		  <p>
+      <span ng-if="!user.signedIn">{{home.logged_out.content}}<br/></span>
+      <span ng-if="user.signedIn">{{home.logged_in.content}}<br/></span>
+      {{home.always.content}}
+		  </p>
+    </div>
 
-		<p ng-if="flag == false">
-		<a class="button icon icon-right ion-chevron-right" ui-sref="tabs.signin">Sign In</a>
+		<p ng-if="!user.signedIn">
+		  <a class="button button-block button-calm icon-right ion-chevron-right" ui-sref="tabs.signin">Sign In</a>
 		</p>
-
+    <p ng-if="user.signedIn">
+      <!-- TODO: Make sure this link leads to the page with L I F E categories for surveys
+           TODO: Make sure that the user has done the intro survey to access the regular surveys -->
+      <a class="button button-block button-calm icon-right ion-chevron-right" ui-sref="tabs.survey-index">Surveys</a>
+    </p>
 		<p>
-		<a class="button icon icon-right ion-chevron-right" ui-sref="tabs.resource-index">Explore</a>
+		  <a class="button button-block button-calm icon-right ion-chevron-right" ui-sref="tabs.resource-index">Explore</a>
 		</p>
 	</ion-content>
 </ion-view>

@@ -7,18 +7,19 @@
             {{question.content}}
           </div>
         </div>
-			<ion-radio ng-repeat="answer in question.answers" ng-value="answer.score" ng-click="next(answer)">
-				{{answer.content}}
+			<ion-radio ng-repeat="answer in answers" ng-value="answer.score" ng-model="data.answers" ng-change="	next(answer)" name="answers">
+	    		{{answer.content}}
 	    	</ion-radio>
 			</div>
 		</div>
 
 		<div id="survey_end" ng-if="end">
-			<div id="show_resources" ng-if="showResources">
-				<p>Based on your response to this survey, we recommend you take a look at these resources.</p>
+			<div id="show_resources" ng-if="showResources" ng-controller="SurveyEndPropertiesCtrl">
+				<div ng-bind-html="surveyend.content"></div>
 				<div ng-repeat="resource in showResources">
 					<p ng-repeat="r in resource">
-						{{r.content}}: {{r.description}}
+						<a class="item"  ng-href="http://{{r.content}}">{{r.content}}</a>
+						{{r.description}}
 					</p>
 				</div>
 			</div>

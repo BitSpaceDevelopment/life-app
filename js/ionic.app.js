@@ -7,18 +7,24 @@
 // 'starter.controllers' is found in controllers.js
 
 window.lifeApp = {
-  application: angular.module('lifeApp', ['ionic', 'lifeApp.lib', 'lifeApp.controllers', 'lifeApp.services', 'ngResource', 'ng-token-auth', 'rails']),
+  application: angular.module('lifeApp', ['ionic', 'lifeApp.lib', 'lifeApp.controllers', 'lifeApp.services', 'ngResource', 'ng-token-auth', 'rails', 'ngRoute']),
   controllers: angular.module('lifeApp.controllers', []),
   services: angular.module('lifeApp.services', []),
   lib: angular.module('lifeApp.lib', [])
 };
 
+window.env = {
+
+  /***Development***/
+  // apiUrl: 'http://localhost:3000/api/v1'
+
+  /***Production***/
+  apiUrl: 'http://stage.lifeapp.bitspacedevelopment.com/api/v1'
+
+};
+
 lifeApp.application.config(function($httpProvider, $authProvider, $stateProvider, $urlRouterProvider) {
   $httpProvider.defaults.withCredentials = true;
-
-  $authProvider.configure({
-    apiUrl: 'http://stage.lifeapp.bitspacedevelopment.com/api/v1'
-  });
 
   // States
   $stateProvider
@@ -26,30 +32,27 @@ lifeApp.application.config(function($httpProvider, $authProvider, $stateProvider
   .state('tabs', {
     url: '/',
     templateUrl: 'templates/tabs.html',
-    controller: 'UserTabsCtrl'
+    controller: 'UserSessionCtrl'
   })
   .state('tabs.home', {
     url: 'home',
     views: {
       'home-tab': {
         templateUrl: 'templates/home.html',
-        controller: 'UserTabsCtrl'
+        controller: 'UserSessionCtrl'
       }
     }
   })
-  .state('tabs.about', {
-    url: 'about',
+  .state('tabs.landing', {
+    url: 'landing-page',
     views: {
-      'about-tab': {
-        templateUrl: 'templates/about.html'
+      'home-tab': {
+        templateUrl: 'templates/landing.html'
       }
-    }
-  })
-  .state('tabs.contact', {
-    url: 'contact',
-    views: {
-      'contact-tab': {
-        templateUrl: 'templates/contact.html'
+    },
+    resolve: {
+      auth: function($auth) {
+        return $auth.validateUser();
       }
     }
   })
@@ -58,16 +61,26 @@ lifeApp.application.config(function($httpProvider, $authProvider, $stateProvider
     views: {
       'home-tab': {
         templateUrl: 'templates/surveys.html',
-        controller: 'SurveyCtrl'
+        controller: 'IntroSurveyCtrl'
+      }
+    },
+    resolve: {
+      auth: function($auth) {
+        return $auth.validateUser();
       }
     }
   })
-  .state('tabs.life-survey', {
-    url: 'life-survey/:survey',
+  .state('tabs.survey', {
+    url: 'survey/:survey',
     views: {
       'home-tab': {
-        templateUrl: 'templates/life-survey.html',
-        controller: 'LifeSurveyCtrl'
+        templateUrl: 'templates/survey.html',
+        controller: 'SurveyCtrl'
+      }
+    },
+    resolve: {
+      auth: function($auth) {
+        return $auth.validateUser();
       }
     }
   })
@@ -78,30 +91,54 @@ lifeApp.application.config(function($httpProvider, $authProvider, $stateProvider
         templateUrl: 'templates/living-quiz.html',
         controller: 'LivingQuizCtrl'
       }
+    },
+    resolve: {
+      auth: function($auth) {
+        return $auth.validateUser();
+      }
     }
   })
   .state('tabs.survey-index', {
-    url: 'surveyindex',
+    url: 'survey/categories',
     views: {
       'home-tab': {
         templateUrl: 'templates/survey-index.html',
         controller: 'SurveyIndexCtrl'
+      }
+    },
+    resolve: {
+      auth: function($auth) {
+        return $auth.validateUser();
+      }
+    }
+  })
+  .state('tabs.surveys', {
+    url: 'survey/categories/:id',
+    views: {
+      'home-tab': {
+        templateUrl: 'templates/surveys.html',
+        controller: 'SurveysCtrl'
+      }
+    },
+    resolve: {
+      auth: function($auth) {
+        return $auth.validateUser();
       }
     }
   })
   // Resources
 
   .state('tabs.resource-index', {
-    url: 'resources-index',
+    url: 'resourcesindex',
     views: {
       'home-tab': {
         templateUrl: 'templates/resource-index.html',
-        controller: 'ResourceCategoryCtrl'
+        controller: 'CategoryIndexCtrl'
       }
     }
   })
   .state('tabs.resources', {
-    url: 'resources/:category',
+    url: 'resources/:categoryId',
     views: {
       'home-tab': {
         templateUrl: 'templates/resources.html',
@@ -111,16 +148,13 @@ lifeApp.application.config(function($httpProvider, $authProvider, $stateProvider
   })
   //End Resources
 
-  .state('settings', {
-    url: 'settings',
-    templateUrl: 'templates/partial-settings.html'
-  })
+  //Sessions
    .state('tabs.signin', {
     url: 'signin',
     views: {
       'home-tab': {
         templateUrl: 'templates/SignIn.html',
-    controller: 'SignInCtrl'
+        controller: 'UserSessionCtrl'
       }
     }
   })
@@ -129,20 +163,12 @@ lifeApp.application.config(function($httpProvider, $authProvider, $stateProvider
     views: {
       'home-tab': {
         templateUrl: 'templates/SignUp.html',
-    controller: 'SignUpCtrl'
-      }
-    }
-  })
-  .state('tabs.signout', {
-    url: 'signout',
-    views: {
-      'home-tab': {
-        controller: 'SignOutCtrl'
+        controller: 'SignUpCtrl'
       }
     }
   });
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/');
+  $urlRouterProvider.otherwise('home');
 });
 
 lifeApp.application.run(function($ionicPlatform) {
@@ -157,13 +183,19 @@ lifeApp.application.run(function($ionicPlatform) {
   });
 });
 
-lifeApp.controllers.controller('AccountCtrl', function($scope) {
-  return $scope.settings = {
-    enableFriends: true
-  };
+lifeApp.controllers.controller('CategoryIndexCtrl', function($scope, Category) {
+  Category.query().$promise.then(function(response){
+    $scope.categorys = response;
+  });
 });
 
-lifeApp.controllers.controller('SurveyCtrl', function($scope, $state, FirstTierQuestion, FirstTierSurvey, Question, Answer, Category, Flag){
+lifeApp.controllers.controller('HomePropertiesCtrl', function($scope, $http){
+  $http.get(env.apiUrl + '/property/home').then(function(resp) {
+    $scope.home = resp.data;
+  });
+});
+
+lifeApp.controllers.controller('IntroSurveyCtrl', function($scope, $state, SurveyQuestion, FirstTierSurvey, Question, Answer, Category, Flag){
 	// set up variables
 	var index = 0;
 	var score = 0;
@@ -186,7 +218,7 @@ lifeApp.controllers.controller('SurveyCtrl', function($scope, $state, FirstTierQ
 		//set up intro survey id by return first object's id
 		surveyID = data[0].id;
 		//load intro survey questions
-		questions = FirstTierQuestion.query({surveyId: surveyID});
+		questions = SurveyQuestion.query({id: surveyID});
 		//retrieve intro questions data
 		questions.$promise.then(function(results){
 			//set up intro question id
@@ -195,7 +227,7 @@ lifeApp.controllers.controller('SurveyCtrl', function($scope, $state, FirstTierQ
 			//scope binding question and answer data by question id
 			$scope.question = Question.get({id: questionID});
 			$scope.answers = Answer.query({questionId: questionID});
-		
+
 
 			//set init ng-model answers
 			$scope.data = {answers: ''};
@@ -207,16 +239,16 @@ lifeApp.controllers.controller('SurveyCtrl', function($scope, $state, FirstTierQ
 				score = answer.score;
 				//depend on returned question category, accumlate socre by category
 				switch (categoryID){
-					case 1:
+					case 2:
 					totalLScore += score;
 					break;
-					case 2:
+					case 3:
 					totalIScore += score;
 					break;
-					case 3:
+					case 4:
 					totalFScore += score;
 					break;
-					case 4:
+					case 5:
 					totalEScore += score;
 					break;
 					default:
@@ -264,88 +296,13 @@ lifeApp.controllers.controller('SurveyCtrl', function($scope, $state, FirstTierQ
 		});
 	});
 });
-lifeApp.controllers.controller('LifeSurveyCtrl', function($scope, $stateParams, $state, FirstTierSurvey, FirstTierQuestion, SecondTierSurvey, RecommendResources, Recommend, Question, Answer) {
-	var index = 0;
-	var id = $stateParams.survey;
-	var questions = [];
-	var surveys = [];
-	var resources = [];
-	var firstTierSurveyID = 0;
 
-	//find first tier survey id which has a second tier survey
-	SecondTierSurvey.query().$promise.then(function(results){
-		//get first tier survey id
-		firstTierSurveyID = results[0].survey_id;
-
-		//load first tier survey data
-		FirstTierSurvey.query().$promise.then(function(survey){
-			//check if current id has an second tier survey	
-			if(firstTierSurveyID == id){
-				//toggle on LQuiz
-					$scope.showLQuiz = true;
-					//toggle off Quiz
-					$scope.showLiFEQuiz = false;
-					//load second tier survey
-					surveys = SecondTierSurvey.query({surveyId: id});
-					//binding second tier survey to $promise
-					surveys.$promise.then(function(response){
-						$scope.surveys = response;
-					});
-			}
-			else{
-				//toggle off LQuiz
-				$scope.showLQuiz = false;
-				//show Quiz
-				$scope.showLiFEQuiz = true;
-				//loading first tier questions
-				questions = FirstTierQuestion.query({surveyId: id});
-				questions.$promise.then(function(data){
-					var qid = data[index].id;
-
-					$scope.question = Question.get({id: qid});
-					$scope.answers = Answer.query({questionId: qid});
-
-					$scope.data = {answers: ""};
-
-					$scope.next = function(answer){
-						score = answer.score;
-						//if user select no or other answers
-						if(score > 0){
-							//call recommend resource function
-							recommendResources(qid);
-						}
-						//increments
-						index += 1;
-						//reset socre
-						score = 0;
-
-						if(index >= data.length){
-							$state.go('tabs.resources');
-							index = 0;
-						}
-						else{
-							qid = data[index].id;
-							$scope.question = Question.get({id: qid});
-							$scope.answers = Answer.query({questionId: qid});
-							$scope.data = {answers: ""};
-						}
-					}
-				});
-			}
-		});	
-	});
-
-	function recommendResources(id){
-		//load recommend resources by question id
-		resources = RecommendResources.query({questionId: id});
-		//loop through resources add to Recommend service
-		resources.$promise.then(function(resources){
-			for (var i = 0; i < resources.length; i++){
-				Recommend.setRecommend(resources[i]);
-			}
-		});
-	}
+lifeApp.controllers.controller('LandingPropertiesCtrl', function($scope, $http){
+  $http.get(env.apiUrl + '/property/about').then(function(resp) {
+    $scope.about = resp.data;
+  });
 });
+
 lifeApp.controllers.controller('LivingQuizCtrl', function($scope, $ionicActionSheet, $timeout, $state, $ionicPopup, $stateParams, Question, Answer, SecondTierSurvey, SecondTierQuestion, ThirdTierSurvey, ThirdTierQuestion, RecommendResources, Recommend){
 	var id = $stateParams.survey;
 	var number = 0;
@@ -515,54 +472,33 @@ lifeApp.controllers.controller('LivingQuizCtrl', function($scope, $ionicActionSh
 		});
 	}
 });
-lifeApp.controllers.controller('ResourceCategoryCtrl', function($scope, resourceCategory) {
-  resourceCategory.query().$promise.then(function(response){
-    $scope.resourceCategorys = response;
-  });
-});
+lifeApp.controllers.controller('ResourceCtrl', function($scope, $stateParams, $ionicPopup, $state, Resource, AllResources, $http, $auth) {
+	var id = $stateParams.categoryId;
 
-lifeApp.controllers.controller('ResourceCtrl', function($scope, $stateParams, $ionicPopup, $state, Resource, Recommend, $http) {
-	var id = $stateParams.category;
-    var resources = [];
-    //get recommedn resources
-    resources = Recommend.getRecommend();
-    //if there are none recommend resources
-    if(resources.length == 0){
-        //do not show the title
-        $scope.showRecommend = false;
-        //get resources sort by category
-        Resource.query({categoryId: id}).$promise.then(function(response){
-            $scope.resources = response;
-            //if there are none resources go back to resource index page
-            if(response.length == 0) {
-                errormsg = "Sorry, there doesn't seem to be any resources at this time";
-                var confirm = $ionicPopup.confirm({
-                            title: errormsg,
-                        });
-                confirm.then(function(res){
-                    if(res){
-                        $state.go('tabs.resource-index');
-                    } else {
-                        $state.go('tabs.resource-index');
-                    }
+  var resourceProvider = !id ? AllResources.query() : Resource.query({categoryId: id});
+
+    //get resources
+    resourceProvider.$promise.then(function(response){
+        $scope.resources = response;
+        //if there are no resources go back to resource index page
+        if(response.length == 0) {
+            errormsg = "Sorry, there doesn't seem to be any resources at this time";
+            var confirm = $ionicPopup.confirm({
+                    title: errormsg,
                 });
-            }
-        });
-    }
-    //if there are recommend resource
-    else{
-        //show title
-        $scope.showRecommend = true;
-        //scope binding recommend resources
-        $scope.resources = resources;
-        //clear Recommend service factory
-        Recommend.setRecommend();
-    }
+            confirm.then(function(res){
+                if(res){
+                    $state.go('tabs.resource-index');
+                } else {
+                    $state.go('tabs.resource-index');
+                }
+            });
+        }
+    });
 
-	
     //add favourite resource
-    $scope.favouritedResource = function favouritedResource(id) {     
-        url = "http://stage.lifeapp.bitspacedevelopment.com/favourite/" + id + ".json";
+    $scope.favouritedResource = function favouritedResource(id) {
+        url = env.apiUrl + "/favourite/" + id;
 
         $http.get(url).success( function(response) {
             if(response.length > 1) {
@@ -578,16 +514,16 @@ lifeApp.controllers.controller('ResourceCtrl', function($scope, $stateParams, $i
                         onTap: function(e) {
                             $state.go('tabs.signin');
                         }
-                      }]                    
+                      }]
                 });
             }else {
                 if(response == 'true'){
                     document.getElementById(id).className = "button button-assertive";
                     document.getElementById(id+'icon').className = "icon ion-ios-heart";
-                } else {                 
+                } else {
                     document.getElementById(id).className = "button button-energized";
                     document.getElementById(id+'icon').className = "icon ion-ios-star";
-                }                
+                }
             }
         });
     }
@@ -615,85 +551,132 @@ lifeApp.controllers.controller('SignInCtrl', function($scope, $state, UserSessio
     );
   }
 });
-
-lifeApp.controllers.controller('SignOutCtrl', function($scope, $ionicPopup, $state, $http) {
-  var confirm = $ionicPopup.confirm({
-    title: "Are you sure you want to logout?",
-  });
-  confirm.then(function(result){
-    if(result){
-      window.localStorage.clear();    
-      $state.go('tabs.home');    
-    }
-  });
-});
-
-lifeApp.controllers.controller('SignUpCtrl', function($scope) {
+lifeApp.controllers.controller('SignUpCtrl', function($scope, $state) {
   $scope.handleRegBtnClick = function() {
-    $auth.submitRegistration($scope.registrationForm)
-      .then(function(resp) {
-        // handle success response
-                  var confirmPopup = $ionicPopup.alert({
-          title: 'success',
-          template: 'Thank you for registering'
-        })
-      })
-      .catch(function(error) {
+    $auth.submitRegistration($scope.registrationForm).then(function(user) {
+        $state.go('tabs.signin');
+      }).catch(function(error) {
         // handle error response
         var error = $ionicPopup.alert({
           title: 'Error',
-          template: "An error occoured"
+          template: "An error occurred."
         })
       });
   };
 });
 
-lifeApp.controllers.controller('SurveyIndexCtrl', function($scope, $ionicPopup, FirstTierSurvey, Flag){	
-	var ids = [];
-	//retrieve first tier survey
-	FirstTierSurvey.query().$promise.then(function(data){
-		//scope binding first tier surveys
-		$scope.surveys = data; 
-		for(var i = 0; i < data.length; i++){
-			ids.push(data[i].id);
-		}
+lifeApp.controllers.controller('SurveyCtrl', function($scope, $stateParams, $state, SurveyQuestion, RecommendResources) {
+	var id = $stateParams.survey;
 
-		//call function get flag
-		var flag = Flag.getFlag();
-		if(flag != ""){
-			switch (flag){
-				case 'L':
-				$scope.highlightId = ids[1];
-				break;
-				case 'I':
-				$scope.highlightId = ids[2];
-				break;
-				case 'F':
-				$scope.highlightId = ids[3];
-				break;
-				case 'E':
-				$scope.highlightId = ids[4];
-				break;
-				default:
-				$scope.highlightId = ids[0];
-			}
+	SurveyQuestion.query({id: id}).$promise.then(function(response){
+		$scope.questions = response;
+		var question_index = 0;
+    	$scope.question = response[question_index];
 
-			$ionicPopup.alert({
-				title: 'Detailed Quiz',
-				template: 'We recommand you to take more detailed quiz'
-			});
-		}
-		else{
+    	$scope.end = false;
+    	$scope.showResources = false;
 
-		}
+    	var resources = [];
+    	var scoreArray = [];
+    	var surveyLength = response.length;
+
+		$scope.next = function(answer) {
+			score = answer.score;
+			scoreArray.push(score);
+
+        	if (question_index >= $scope.questions.length -1) {
+			    var totalNumber = 0;
+			    $scope.end = true;
+
+			    for(var i=0; i<scoreArray.length; i++){
+			      totalNumber = totalNumber + scoreArray[i];
+			    }
+
+			    if(totalNumber > 0){
+			    	$scope.showResources = true;
+			    	$scope.showResources = resources;
+			    }
+        	} else {
+        		if(score > 0){
+        			//user answered 'wrong'
+        			var id = response[question_index].id;
+        			resources.push(RecommendResources.query({questionId: id}));
+        		}
+            	question_index ++;
+            	$scope.question = response[question_index];
+        	}
+        };
 	});
 });
-lifeApp.controllers.controller('UserTabsCtrl', function($scope, $http) {   
 
-	$scope.flag = false;
-	if (window.localStorage['userId']) {
-		$scope.flag = true;
-	}
+lifeApp.controllers.controller('SurveyIndexCtrl', function($scope, $ionicPopup, $http){
+  $http.get(env.apiUrl + '/categories').then(function(resp) {
+    $scope.categories = resp.data;
+  });
+});
+
+lifeApp.controllers.controller('SurveysCtrl', function($scope, $stateParams, $http) {
+  var id = $stateParams.id;
+
+  $http.get(env.apiUrl + '/categories/' + id + '/surveys').then(function(resp) {
+    $scope.surveys = resp.data;
+    $scope.category = $scope.surveys[0].category.category;
+  });
+});
+
+lifeApp.controllers.controller('UserSessionCtrl', function($scope, $state, $window, $ionicPopup, $auth, $ionicHistory) {
+  $scope.user = $auth.user;
+
+  //init sign in form data
+  $scope.data = {};
+
+  $scope.signin = function(){
+    $auth.submitLogin($scope.data).then(function(user) {
+      $ionicHistory.nextViewOptions({disableBack: true});
+
+      if (!user.intro_quiz)
+        $state.go('tabs.landing');
+      else
+        $state.go('tabs.survey-index');
+    }).catch(function(data) {
+      console.log(data);
+
+      $ionicPopup.alert({
+        title: 'Error!',
+        template: data.errors
+      });
+    });
+  };
+
+  $scope.signout = function() {
+    var confirm = $ionicPopup.confirm({
+      title: "Are you sure you want to logout?"
+    });
+    confirm.then(function(result){
+
+      // Stopping further execution
+      if (!result)
+        return;
+
+      // Signing the user out
+      $auth.signOut()
+        // Redirecting to home page
+        .then(function() {
+          $ionicHistory.nextViewOptions({disableBack: true});
+          $state.go('tabs.home');
+        })
+
+        // telling the user there was an error
+        .catch(function(resp) {
+          console.error(resp);
+
+          $ionicPopup.alert({
+            title: 'Error!',
+            template: 'There was an error logging you out.'
+          });
+      });
+    });
+  };
 });
 
 var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
@@ -738,19 +721,34 @@ lifeApp.lib.constant('Module', function() {
   })();
 });
 
+lifeApp.application.config(function($authProvider) {
+  $authProvider.configure({
+    apiUrl: env.apiUrl,
+    storage: 'localStorage'
+  });
+});
+
+lifeApp.services.factory('AllResources', function($resource) {
+  return $resource(env.apiUrl + "/resources");
+});
+
 lifeApp.services.factory('Answer', function($resource){
-	return $resource('http://stage.lifeapp.bitspacedevelopment.com/:questionId/answers/:id', {questionId: '@questionId', id: '@id'});
+	return $resource(env.apiUrl + '/answers/:questionId', {questionId: '@questionId'});
 });
-lifeApp.services.factory('Category', function($resource){
-	return $resource('http://stage.lifeapp.bitspacedevelopment.com/:questionId/categories/:id', {questionId: '@questionId', id: '@id'});
+
+
+lifeApp.services.factory('Category', function($resource) {
+  return $resource(env.apiUrl + "/categories/:id");
 });
+
 lifeApp.services.factory('FirstTierQuestion', function($resource){
-	return $resource('http://stage.lifeapp.bitspacedevelopment.com/surveyQuestions/:surveyId', {surveyId: '@id'});
+	return $resource('http://localhost:3000/surveyQuestions/:surveyId', {surveyId: '@id'});
 });
 
 lifeApp.services.factory('FirstTierSurvey', function($resource){
-	return $resource('http://stage.lifeapp.bitspacedevelopment.com/surveys/:id', {id: '@id'});
+	return $resource(env.apiUrl + '/surveys/:id', {id: '@id'});
 });
+
 lifeApp.services.factory('Flag', function(){
 	var flag = "";
 	var setFlag = function(newFlag){
@@ -772,7 +770,7 @@ lifeApp.services.factory('Flag', function(){
 });
 
 lifeApp.services.factory('Question', function($resource){
-	return $resource('http://stage.lifeapp.bitspacedevelopment.com/questions/:id', {id: '@id'});
+	return $resource(env.apiUrl + '/questions/:id', {id: '@id'});
 });
 
 lifeApp.services.factory('Recommend', function(){
@@ -796,31 +794,38 @@ lifeApp.services.factory('Recommend', function(){
 	};
 });
 lifeApp.services.factory('RecommendResources', function($resource){
-	return $resource('http://stage.lifeapp.bitspacedevelopment.com/recommendResources/:questionId', {questionId: '@id'});
+	return $resource(env.apiUrl + '/recommendResources/:questionId', {questionId: '@id'});
 });
+
 lifeApp.services.factory('Resource', function($resource) {
-  return $resource("http://stage.lifeapp.bitspacedevelopment.com/:categoryId", {categoryId: '@id'});
+  return $resource(env.apiUrl + "/categories/:categoryId/resources", {categoryId: '@id'});
 });
-lifeApp.services.factory('resourceCategory', function($resource) {
-  return $resource("http://stage.lifeapp.bitspacedevelopment.com/resources-list/:id.json");
-});
+
 
 lifeApp.services.factory('SecondTierQuestion', function($resource){
-	return $resource('http://stage.lifeapp.bitspacedevelopment.com/secondTierQuestions/:secondtiersurveyId', {secondtiersurveyId: '@id'});
-});
-lifeApp.services.factory('SecondTierSurvey', function($resource){
-	return $resource('http://stage.lifeapp.bitspacedevelopment.com/secondTierSurveys/:surveyId', {surveyId: '@id'});
-});
-lifeApp.services.factory('ThirdTierQuestion', function($resource){
-	return $resource('http://stage.lifeapp.bitspacedevelopment.com/thirdTierQuestions/:thirdtiersurveyId', {thirdtiersurveyId: '@id'});
-});
-lifeApp.services.factory('ThirdTierSurvey', function($resource){
-	return $resource('http://stage.lifeapp.bitspacedevelopment.com/thirdTierSurveys/:secondtiersurveyId', {secondtiersurveyId: '@id'});
-});
-lifeApp.services.factory('UserRegistration', function($resource) {
-    return $resource("http://stage.lifeapp.bitspacedevelopment.com/users/sign_up.json");
+	return $resource(env.apiUrl + '/secondTierQuestions/:secondtiersurveyId', {secondtiersurveyId: '@id'});
 });
 
+
+lifeApp.services.factory('SecondTierSurvey', function($resource){
+	return $resource(env.apiUrl + '/secondTierSurveys/:surveyId', {surveyId: '@id'});
+});
+
+lifeApp.services.factory('SurveyQuestion', function($resource){
+	return $resource(env.apiUrl + '/surveyQuestions/:id');
+});
+
+lifeApp.services.factory('ThirdTierQuestion', function($resource){
+	return $resource(env.apiUrl + '/thirdTierQuestions/:thirdtiersurveyId', {thirdtiersurveyId: '@id'});
+});
+
+lifeApp.services.factory('ThirdTierSurvey', function($resource){
+	return $resource(env.apiUrl + '/thirdTierSurveys/:secondtiersurveyId', {secondtiersurveyId: '@id'});
+});
+
+lifeApp.services.factory('UserDestroy', function($resource) {
+  return $resource("http://localhost:3000/users/sign_out.json");
+});
 lifeApp.services.factory('UserSession', function($resource) {
-  return $resource("http://stage.lifeapp.bitspacedevelopment.com/sign_in.json");
+  return $resource("http://localhost:3000/users/sign_in.json");
 });

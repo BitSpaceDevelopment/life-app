@@ -1,14 +1,7 @@
-<!-- partial-surveys.html -->
-<ion-view view-title="Survey">
-	<ion-content class="padding">
-	     <div class="item item-body">
-	        <div>
-	          {{question.content}}
-	        </div>
-	    </div>
-
-	    <ion-radio ng-repeat="answer in answers" ng-value="answer.score" ng-model="data.answers" ng-change="next(answer)" name="answers">
-	    	{{answer.content}}
-	    </ion-radio>
-	</ion-content>
+<ion-view view-title="{{ category }} Surveys">
+  <ion-content class="padding">
+    <button class="button button-block icon-right ion-chevron-right"
+            ng-repeat="survey in surveys"
+            ui-sref="tabs.survey({survey: survey.id})">{{ survey.name }}</button>
+  </ion-content>
 </ion-view>

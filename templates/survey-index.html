@@ -1,13 +1,11 @@
-<ion-view view-title="LiFE Survey">
+<ion-view view-title="LiFE Surveys">
 	<ion-content class="padding">
-    <div class="list card">
-      <div class="item item-body" ng-repeat="survey in surveys" ng-class="{hide: $first, highlightclass: survey.id == highlightId}">
-        <div>
-          <p>
-            <a class="button icon icon-right ion-chevron-right" ui-sref="tabs.life-survey({survey: survey.id})">{{survey.name}}</a>
-          </p>
-        </div>
-      </div>
+    <div class="list card category"
+        ng-repeat="category in categories | filter:{category: '!Introduction'}"
+        ui-sref="tabs.surveys({id: category.id})">
+      <span class="category-letter">{{ category.category.charAt(0) }}</span>
+      <span class="category-name">{{ category.category.substring(1, category.category.length) }}</span>
+      <div class="category-symbol"><span class="fa fa-angle-right"></span></div>
     </div>
 	</ion-content>
 </ion-view>

@@ -1,16 +1,113 @@
-/* Empty. Add your own CSS if you like */
-.highlightclass{
-	background: lightBlue
-}
+/*---------------------*/
+/* Table of Contents   */
+/*---------------------*/
+/*0. General Styles    */
+/*1. Adaptive Styles   */
+/*2. Home Page Styles  */
+/*3. About Page Styles */
+/*4. Category Styles   */
+/*---------------------*/
 
-a {
-	color: blue
+/**/
+/*0. General Styles*/
+/**/
+body {
+  font-family: 'Open Sans', sans-serif;
 }
-
-a:visited {
-	color: darkBlue
+.button-calm {
+  background-color: #8BB3F8 !important;
+  border-color: #5F97F7 !important;
 }
-
+.button-energized {
+  background-color: #FFD526 !important;
+}
+#password, #email, #conf-password {
+  width: 99%;
+}
 a:hover {
-	color: blue
+  color: #B9D3FF;
 }
+
+/**/
+/*1. Adaptive Styles*/
+/**/
+@media (min-width: 600px) {
+  .all-content {
+    width: 70%;
+    margin-left: 15%;
+    margin-right: 15%;
+  }
+}
+@media (min-width: 850px) {
+  .all-content {
+    width: 60%;
+    margin-left: 20%;
+    margin-right: 20%;
+  }
+}
+
+/**/
+/*2. Home Page Styles*/
+/**/
+.welcome-card {
+  background-image: url('../img/studentPhoto1.jpg');
+  background-size: 120%;
+  background-position: center;
+  height: 200px;
+  width: 100%;
+}
+.welcome-card img {
+  opacity: 0.5;
+  height: 180px;
+  margin: 10px auto 0;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+  opacity: 0.3;
+}
+.welcome-text {
+  font-family: 'Raleway', sans-serif;
+  text-align: center;
+  margin-top: 10px;
+  opacity: 0.3;
+  font-weight: 600;
+}
+.welcome-text-paragraph {
+  margin: 10px 20px 20px;
+  background-color: #ECECEC;
+  border-radius: 10px;
+  padding: 10px 20px;
+}
+
+/**/
+/*3. About Page Styles*/
+/**/
+.welcome-card.about-ver {
+  background-image: url('../img/studentPhoto3.jpg');
+}
+
+/**/
+/*4. Category Styles*/
+/**/
+.category {
+  padding: 10px;
+  position: relative;
+}
+
+.category .category-letter {
+  font-size: 2em;
+}
+
+.category .category-name {
+  color: rgba(0, 0, 0, 0.5)
+}
+
+.category .category-symbol {
+  vertical-align: middle;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 10px;
+  color: rgba(0, 0, 0, 0.5);
+  font-size: 2em;
+}
+

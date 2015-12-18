@@ -1,19 +1,15 @@
 <ion-view view-title="Resources List">
   <ion-content class="padding">
-    <div class="list card">
-      <div class="item item-body" ng-repeat="resource in resourceCategorys">
-        <div>
-          <p>
-            <a ui-sref="tabs.resources({category: resource.id})">{{resource.category}} Resources</a>
-          </p>
-        </div>
+    <div class="list card" >
+      <div ng-repeat="category in categorys" class="item" ui-sref="tabs.resources({categoryId: category.id})">
+        {{category.category}} Resources
       </div>
-      <div class="item item-body">
-        <div>
-          <p><a ui-sref="tabs.resources">View All Resources</a></p>
-        </div>
+      <div class="item" ui-sref="tabs.resources">
+        View All Resources
       </div>
-      
     </div>
+
+
+
   </ion-content>
 </ion-view>

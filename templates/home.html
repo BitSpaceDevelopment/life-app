@@ -7,9 +7,9 @@
     <h1 class="welcome-text">WELCOME TO THE <img src="../img/logoBlackXSmall.png" height="27px" class="logo-in-text"> APP</h1>
     <div class="welcome-text-paragraph" ng-controller="HomePropertiesCtrl">
 		  <p>
-      <span ng-if="!user.signedIn">{{home.logged_out.content}}<br/></span>
-      <span ng-if="user.signedIn">{{home.logged_in.content}}<br/></span>
-      {{home.always.content}}
+      <div ng-if="!user.signedIn" ng-bind-html="home.logged_out.content"></div>
+      <div ng-if="user.signedIn" ng-bind-html="home.logged_in.content"></div>
+      <div ng-bind-html="home.always.content"></div>
 		  </p>
     </div>
 

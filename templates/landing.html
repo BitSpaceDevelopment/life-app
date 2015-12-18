@@ -6,7 +6,7 @@
       <img src="../img/logoWhiteSmall.png">
     </div>
     <div class="welcome-text-paragraph" ng-controller="LandingPropertiesCtrl">
-      {{about.content}}
+      <div ng-bind-html="about.content"></div>
     </div>
 
     <!-- TODO: This button should not appear if the user has completed the intro-survey -->

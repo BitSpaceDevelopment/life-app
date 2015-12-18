@@ -1,7 +1,7 @@
 <!-- partial-signup.html -->
 <ion-view view-title="Sign Up">
   <ion-content class="padding">
-    <form ng-submit="submitRegistration(registrationForm)" role="form" ng-init="registrationForm = {}">
+    <form ng-submit="submitReg(registrationForm)" role="form" ng-init="registrationForm = {}">
     <div class="list">
       <label class="item item-input item-stacked-label">
         <span class="input-label">Email</span>
@@ -15,7 +15,7 @@
         <span class="input-label">Confirm Password</span>
         <input type="password" name="password_confirmation" ng-model="registrationForm.password_confirmation" required id="conf-password">
       </label>
-      
+
       <div class="padding">
         <button type="submit" class="button button-block button-calm">
           Sign Up

@@ -588,5 +588,5 @@ lifeApp.services.factory('SurveyQuestion', function($resource){
 });
 
 lifeApp.services.factory('UserSession', function($resource) {
-  return $resource("http://localhost:3000/users/sign_in.json");
+  return $resource("http://stage.lifeapp.bitspacedevelopment.com/api/v1/users/sign_in.json");
 });

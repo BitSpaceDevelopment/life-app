@@ -54,15 +54,15 @@ angular.module('starter.services', [])
 // });
 
 .factory('question', function($resource) {
-  return $resource("http://localhost:3000/quiz/:id.json");
+  return $resource("http://stage.lifeapp.bitspacedevelopment.com/api/v1/quiz/:id.json");
 })
 
 .factory('resource', function($resource) {
-  return $resource("http://localhost:3000/resource/:id.json")
+  return $resource("http://stage.lifeapp.bitspacedevelopment.com/api/v1/resource/:id.json")
 })
 
 .factory('UserSession', function($resource) {
-  return $resource("http://localhost:3000/users/sign_in.json");
+  return $resource("http://stage.lifeapp.bitspacedevelopment.com/api/v1/users/sign_in.json");
 })
 
 .factory('Chats', function() {

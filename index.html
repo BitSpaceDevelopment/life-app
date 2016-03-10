@@ -5,9 +5,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
     <!-- Update your html tag to include the itemscope and itemtype attributes. -->
-    <html itemscope itemtype="http://schema.org/Article">
+    <html itemscope="" itemtype="http://schema.org/Article">
     <title>The LiFE App</title>
-    <meta name="description" content="The LiFE app is a tool to help you get ready for post-secondary education." />
+    <meta name="description" content="The LiFE app is a tool to help you get ready for post-secondary education.">
 
     <!-- Schema.org markup for Google+ -->
     <meta itemprop="name" content="The LiFE App">
@@ -22,17 +22,15 @@
     <meta name="twitter:image:src" content="../img/icon.png">
 
     <!-- Open Graph data -->
-    <meta property="og:title" content="The LiFE App" />
-    <meta property="og:type" content="article" />
+    <meta property="og:title" content="The LiFE App">
+    <meta property="og:type" content="article">
     <!-- TODO: Find out what domain they had and put it here -->
-    <meta property="og:url" content="http://www.websitehere.com/" />
-    <meta property="og:image" content="../img/icon.png" />
-    <meta property="og:description" content="The LiFE app is a tool to help you get ready for post-secondary education" />
+    <meta property="og:url" content="http://www.websitehere.com/">
+    <meta property="og:image" content="../img/icon.png">
+    <meta property="og:description" content="The LiFE app is a tool to help you get ready for post-secondary education">
 
     <!-- favicon -->
-    <link rel="icon"
-          type="image/png"
-          href="../img/favicon.png">
+    <link rel="icon" type="image/png" href="../img/favicon.png">
 
     <!-- CSS -->
     <!-- compiled css output -->
@@ -42,10 +40,10 @@
     <!-- extra css -->
     <link href="css/style.css" rel="stylesheet">
     <!-- Fonts -->
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
-    <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+    <link href="https://fonts.googleapis.com/css?family=Open%20Sans" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet" type="text/css">
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 
     <!-- JAVASCRIPT -->
     <!-- ionic/angularjs js -->
@@ -58,12 +56,12 @@
     <script src="lib/angular-route/angular-route.js"></script>
     <script src="lib/ng-token-auth/dist/ng-token-auth.js"></script>
     <script src="lib/angularjs-rails-resource/angularjs-rails-resource.js"></script>
+    <!-- environemnt js -->
+    <script src="js/env.js"></script>
     <!-- compiled js output -->
-    <script src="js/ionic.app.min.js"></script>
-    <!-- uncompiled js -->
-    <script src="js/app.js"></script>
+    <script src="js/ionic.app.js"></script>
 
-  </head>
+  </html></head>
   <body ng-app="lifeApp" class="platform-browser platform-cordova platform-webview">
     <ion-nav-view></ion-nav-view>
   </body>

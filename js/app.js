@@ -1,3 +1,0 @@
-/**
-    Empty for unminified stuff
-*/

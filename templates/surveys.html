@@ -1,7 +1,0 @@
-<ion-view view-title="{{ category }} Surveys">
-  <ion-content class="padding">
-    <button class="button button-block icon-right ion-chevron-right"
-            ng-repeat="survey in surveys"
-            ui-sref="tabs.survey({survey: survey.id})">{{ survey.name }}</button>
-  </ion-content>
-</ion-view>

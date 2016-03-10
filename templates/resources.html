@@ -5,8 +5,8 @@
 	    		<p><a class="item" href={{resource.content}}>{{resource.content}}</a></p>
 	        	<p>{{resource.description}}</p>
 
-	       		<button id="{{resource.id}}" class="button" ng-class="{true:'button-assertive', false:'button-energized'}[resource.favourited_by.indexOf('{{user.uid}}') != -1]" ng-click="favouritedResource({{resource.id}})">
-	        		<i id="{{resource.id}}icon" class="icon" ng-class="{true:'ion-ios-heart', false:'ion-ios-star'}[resource.favourited_by.indexOf('{{user.uid}}') != -1]"></i>
+	       		<button class="button" ng-class="{true:'button-assertive', false:'button-energized'}[resource.favourite]" ng-click="favouritedResource(resource)">
+	        		<i class="icon" ng-class="{true:'ion-ios-heart', false:'ion-ios-star'}[resource.favourite]"></i>
 	        	</button>
 	    	</div>
 	    </div>

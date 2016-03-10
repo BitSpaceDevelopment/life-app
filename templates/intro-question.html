@@ -1,0 +1,21 @@
+<!-- partial-question.html -->
+<ion-view view-title="Survey">
+	<ion-content class="padding">
+			<div
+				ng-repeat="question in intro_questions"
+				ng-hide="questionIndex != $index">
+		     <div class="item item-body">
+		        <div>
+		          {{ question.content }}
+		        </div>
+		    </div>
+
+		    <ion-radio
+					ng-repeat="answer in question.intro_answers"
+					ng-click="respondWith(answer)"
+					name="answers">
+		    	{{ answer.content }}
+		    </ion-radio>
+			</div>
+	</ion-content>
+</ion-view>

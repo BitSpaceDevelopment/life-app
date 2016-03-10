@@ -7,16 +7,16 @@
     <h1 class="welcome-text">WELCOME TO THE <img src="../img/logoBlackXSmall.png" height="27px" class="logo-in-text"> APP</h1>
     <div class="welcome-text-paragraph" ng-controller="HomePropertiesCtrl">
 		  <p>
-      <div ng-if="!user.signedIn" ng-bind-html="home.logged_out.content"></div>
-      <div ng-if="user.signedIn" ng-bind-html="home.logged_in.content"></div>
-      <div ng-bind-html="home.always.content"></div>
+      <div ng-bind-html="home_logged_in.content" ng-show="user.signedIn"></div>
+			<div ng-bind-html="home_logged_out.content" ng-hide="user.signedIn"></div>
+      <div ng-bind-html="home.content"></div>
 		  </p>
     </div>
 
-		<p ng-if="!user.signedIn">
+		<p ng-hide="user.signedIn">
 		  <a class="button button-block button-calm icon-right ion-chevron-right" ui-sref="tabs.signin">Sign In</a>
 		</p>
-    <p ng-if="user.signedIn">
+    <p ng-show="user.signedIn">
       <!-- TODO: Make sure this link leads to the page with L I F E categories for surveys
            TODO: Make sure that the user has done the intro survey to access the regular surveys -->
       <a class="button button-block button-calm icon-right ion-chevron-right" ui-sref="tabs.survey-index">Surveys</a>

@@ -2,8 +2,8 @@
 	<ion-content class="padding">
 	    <div id="all_resources" class="list card" ng-repeat="resource in resources">
 	    	<div class="item item-button-right">
-	    		<p><a class="item" href={{resource.content}}>{{resource.content}}</a></p>
-	        	<p>{{resource.description}}</p>
+	    		<p class="item">{{ resource.content }}</p>
+	        	<p>{{ resource.description }}</p>
 
 	       		<button class="button" ng-class="{true:'button-assertive', false:'button-energized'}[resource.favourite]" ng-click="favouritedResource(resource)">
 	        		<i class="icon" ng-class="{true:'ion-ios-heart', false:'ion-ios-star'}[resource.favourite]"></i>

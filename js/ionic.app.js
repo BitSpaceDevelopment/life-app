@@ -96,6 +96,18 @@ lifeApp.application.config(function($httpProvider, $authProvider, $stateProvider
       }
     }
   })
+  .state('tabs.user-resources-index', {
+    url: 'user/resources',
+    views: {
+      'home-tab': {
+        templateUrl: 'templates/user/resources/index.html',
+        controller:  'UserResourcesIndexCtrl as ctrl',
+        resolve: {
+          resources: function(Resource) { return Resource.userQuery(); }
+        }
+      }
+    }
+  })
   .state('tabs.resources', {
     url: 'resources/:categoryId',
     views: {
@@ -140,48 +152,6 @@ lifeApp.application.run(function($ionicPlatform) {
       return StatusBar.styleLightContent();
     }
   });
-});
-
-var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
-
-lifeApp.lib.constant('Module', function() {
-  var Module;
-  return Module = (function() {
-    function Module() {}
-
-    Module.KEYOWRDS = ['extended', 'included'];
-
-    Module.extend = function(obj) {
-      var key, ref, value;
-      for (key in obj) {
-        value = obj[key];
-        if (indexOf.call(Module.KEYOWRDS, key) < 0) {
-          this[key] = value;
-        }
-      }
-      if ((ref = obj.extended) != null) {
-        ref.apply(this);
-      }
-      return this;
-    };
-
-    Module.include = function(obj) {
-      var key, ref, value;
-      for (key in obj) {
-        value = obj[key];
-        if (indexOf.call(Module.KEYOWRDS, key) < 0) {
-          this.prototype[key] = value;
-        }
-      }
-      if ((ref = obj.included) != null) {
-        ref.apply(this);
-      }
-      return this;
-    };
-
-    return Module;
-
-  })();
 });
 
 lifeApp.controllers.controller('CategoryIndexCtrl', function($scope, Category) {
@@ -239,10 +209,10 @@ lifeApp.controllers.controller('LandingPropertiesCtrl', function($scope, Propert
   });
 });
 
-lifeApp.controllers.controller('ResourceCtrl', function($scope, $stateParams, $ionicPopup, $state, Resource, AllResources, $http, $auth) {
+lifeApp.controllers.controller('ResourceCtrl', function($scope, $stateParams, $ionicPopup, $state, Resource, $http, $auth) {
 	var id = $stateParams.categoryId;
 
-  var resourceProvider = !id ? AllResources.query() : Resource.query({category_id: id});
+  var resourceProvider = !id ? Resource.query() : Resource.categoriesQuery({category_id: id});
 
     //get resources
     resourceProvider.$promise.then(function(response){
@@ -268,9 +238,9 @@ lifeApp.controllers.controller('ResourceCtrl', function($scope, $stateParams, $i
 
 				var url = env.apiUrl;
 				if (resource.favourite) {
-					 url += '/resources/' + id + '/unfavourite';
+					 url += '/resources/' + resource.id + '/unfavourite';
 				} else {
-					url += '/resources/' + id + '/favourite';
+					url += '/resources/' + resource.id + '/favourite';
 				}
 
         $http.put(url)
@@ -320,7 +290,7 @@ lifeApp.controllers.controller('SignUpCtrl', function($scope, $state, $ionicPopu
   };
 });
 
-lifeApp.controllers.controller('SurveyCtrl', function($scope, $stateParams, $auth, $http, SecondTierQuestion, RecommendResources, Survey, SurveyQuestion, IntroResponse) {
+lifeApp.controllers.controller('SurveyCtrl', function($scope, $stateParams, $auth, $http, SecondTierQuestion, Resource, Survey, SurveyQuestion, IntroResponse) {
 	var category_id = $stateParams.id;
 
   var score      = 0,
@@ -359,7 +329,7 @@ lifeApp.controllers.controller('SurveyCtrl', function($scope, $stateParams, $aut
 						// set recommend resources
 						if (score > 0) {
 		        	// need resources
-		        	resources.push(RecommendResources.query({question_id: results[question_index].id}));
+		        	resources.push(Resource.questionsQuery({question_id: results[question_index].id}));
 		      	}
 
 		        question_index ++;
@@ -409,7 +379,7 @@ lifeApp.controllers.controller('SurveyCtrl', function($scope, $stateParams, $aut
 									//set recommend resources
 									if (score > 0) {
 					        	//need resources
-					        	resources.push(RecommendResources.query({ question_id: questions[q_index].id}));
+					        	resources.push(Resource.questionsQuery({ question_id: questions[q_index].id}));
 					        }
 
 					        q_index ++;
@@ -517,15 +487,53 @@ lifeApp.controllers.controller('UserSessionCtrl', function($scope, $state, $wind
   };
 });
 
+var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+
+lifeApp.lib.constant('Module', function() {
+  var Module;
+  return Module = (function() {
+    function Module() {}
+
+    Module.KEYOWRDS = ['extended', 'included'];
+
+    Module.extend = function(obj) {
+      var key, ref, value;
+      for (key in obj) {
+        value = obj[key];
+        if (indexOf.call(Module.KEYOWRDS, key) < 0) {
+          this[key] = value;
+        }
+      }
+      if ((ref = obj.extended) != null) {
+        ref.apply(this);
+      }
+      return this;
+    };
+
+    Module.include = function(obj) {
+      var key, ref, value;
+      for (key in obj) {
+        value = obj[key];
+        if (indexOf.call(Module.KEYOWRDS, key) < 0) {
+          this.prototype[key] = value;
+        }
+      }
+      if ((ref = obj.included) != null) {
+        ref.apply(this);
+      }
+      return this;
+    };
+
+    return Module;
+
+  })();
+});
+
 lifeApp.application.config(function($authProvider) {
   $authProvider.configure({
     apiUrl:   env.apiUrl,
     storage: 'localStorage'
   });
-});
-
-lifeApp.services.factory('AllResources', function($resource) {
-  return $resource(env.apiUrl + "/resources");
 });
 
 lifeApp.services.factory('Category', function($resource) {
@@ -557,14 +565,26 @@ lifeApp.services.factory('Question', function($resource){
 	return $resource(env.apiUrl + '/questions/:id', {id: '@id'});
 });
 
-lifeApp.services.factory('RecommendResources', function($resource){
-	return $resource(env.apiUrl + '/questions/:question_id/resources', { question_id: '@id'});
-});
-
 lifeApp.services.factory('Resource', function($resource) {
   return $resource(
-      env.apiUrl + "/categories/:category_id/resources",
-      { category_id: '@id' }
+      env.apiUrl + '/resources',
+      null,
+      {
+        categoriesQuery: {
+          url:    env.apiUrl + '/categories/:category_id/resources',
+          params: { category_id: '@category_id' },
+          isArray: true
+        },
+        questionsQuery: {
+          url:    env.apiUrl + '/questions/:question_id/resources',
+          params: { question_id: '@question_id' },
+          isArray: true
+        },
+        userQuery: {
+          url:    env.apiUrl + '/user/resources',
+          isArray: true
+        }
+      }
   );
 });
 
@@ -590,4 +610,8 @@ lifeApp.services.factory('User', function($resource){
 
 lifeApp.services.factory('UserSession', function($resource) {
   return $resource("http://localhost:3000/users/sign_in.json");
+});
+
+lifeApp.controllers.controller('UserResourcesIndexCtrl', function($scope, resources) {
+	this.resources = resources;
 });

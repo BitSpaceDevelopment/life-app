@@ -1,0 +1,10 @@
+<ion-view view-title="My Resources">
+	<ion-content class="padding">
+	    <div id="my_resources" class="list card" ng-repeat="resource in ctrl.resources">
+	    	<div class="item item-button-right">
+	    		<p class="item">{{ resource.content }}</p>
+	        <p>{{ resource.description }}</p>
+	    	</div>
+	    </div>
+	</ion-content>
+</ion-view>
